@@ -9,7 +9,7 @@
 #include <fstream>
 #include <map>
 #include <vector>
-#include "bintree.h"  // propios o los de las estructuras de datos de clase
+#include "TreeSet_AVL.h"  // propios o los de las estructuras de datos de clase
 
 using namespace std;
 /*@ <answer>
