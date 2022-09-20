@@ -23,8 +23,9 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include "PriorityQueue.h"
 
-#include "TreeSet_AVL.h"
 using namespace std;
 
 bool resuelveCaso() {
@@ -35,33 +36,26 @@ bool resuelveCaso() {
 
 	if (nElems == 0)
 		return false;
-
-	int val;
-	Set<int> arbol;
+	PriorityQueue <long int> sumas;
+	long int valor;
 	for (int i = 0; i < nElems; i++)
 	{
-		cin >> val;
-		arbol.insert(val);
+		cin >> valor;
+		sumas.push(valor);
 	}
-	// resolver el caso posiblemente llamando a otras funciones
-	int numConsultas;
-	cin >> numConsultas;
-	int cons, kesimo;
-	for (int i = 0; i < numConsultas; i++)
-	{
-		cin >> cons;
-		try {
-			kesimo = arbol.kesimo(cons);
-			cout << kesimo << "\n";
+	long int val1, val2;
+	valor = 0;
+	while (!sumas.empty()) {
+		val1 = sumas.top();
+		sumas.pop();
+		if (sumas.empty()) break;
+		val2 = sumas.top() + val1;
+		valor += val2;
+		sumas.pop();
 
-		}
-		catch (std::out_of_range& e)
-		{
-			cout << "??\n";
-		}
+		sumas.push(val2);
 	}
-	// escribir la solución
-	cout << "---\n";
+	cout << valor << "\n";
 	return true;
 }
 
