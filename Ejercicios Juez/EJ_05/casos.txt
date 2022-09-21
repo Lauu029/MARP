@@ -1,0 +1,13 @@
+9
+I Alberto 4000
+I Pepe 4000
+I Rosa 4000
+I Laura 4000
+A
+A
+A
+A
+I Sara 3000
+A
+A
+0
