@@ -28,11 +28,11 @@ using namespace std;
 struct paciente {
 	string nombre;
 	long int gravedad;
-	long int turno;
+	int id;
 };
 
 bool operator>(paciente const& a, paciente const& b) {
-	return a.gravedad > b.gravedad || (a.gravedad == b.gravedad && a.turno < b.turno);
+	return a.gravedad > b.gravedad || (a.gravedad == b.gravedad && a.id < b.id);
 }
 bool resuelveCaso() {
 
@@ -41,31 +41,28 @@ bool resuelveCaso() {
 	cin >> nCasos;
 	if (!cin)
 		return false;
-	char accion;
+	if (nCasos == 0) return false;
 
 	PriorityQueue<paciente, greater<paciente>> urgencias;
 
-	cin >> accion;
-	string paciente;
-	long int gravedad;
-	int t = 0;
+	char accion;
+	paciente enfermo;
+	int i = 0;
 	while (nCasos--) {
 
+		cin >> accion;
 		if (accion == 'I') {
-			cin >> paciente >> gravedad;
-			urgencias.push({ paciente,gravedad,t });
-			t++; 
+			cin >> enfermo.nombre >> enfermo.gravedad;
+			enfermo.id = i;
+			urgencias.push(enfermo);
+			i++;
 		}
 		else if (!urgencias.empty()) {
 			cout << urgencias.top().nombre << "\n";
 			urgencias.pop();
 		}
-		cin >> accion;
 	}
 	cout << "---\n";
-	// resolver el caso posiblemente llamando a otras funciones
-
-	// escribir la solución
 
 	return true;
 }

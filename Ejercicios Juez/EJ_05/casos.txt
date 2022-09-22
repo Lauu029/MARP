@@ -1,13 +1,22 @@
 9
 I Alberto 4000
+I Pepe 3000
+A
+I Rosa 2000
+I Laura 5000
+A
+I Sara 3000
+A
+A
+0
+9
+I Alberto 4000
 I Pepe 4000
+A
 I Rosa 4000
 I Laura 4000
 A
-A
-A
-A
-I Sara 3000
+I Sara 4000
 A
 A
 0
