@@ -10,14 +10,7 @@ class queue_medianas
 public:
 	queue_medianas() {
 	}
-	void addElemento(long int el) {
-		if (menores.empty()) menores.push(el);
-		else {
-			if (el > menores.top())
-				mayores.push(el);
-			else menores.push(el);
-		}
-
+	void rebalancear() {
 		//Equilibra las colas
 		if (menores.size() > mayores.size() + 1) {
 			mayores.push(menores.top());
@@ -27,6 +20,17 @@ public:
 			menores.push(mayores.top());
 			mayores.pop();
 		}
+
+	}
+	void addElemento(long int el) {
+		if (menores.empty()) menores.push(el);
+		else {
+			if (el > menores.top())
+				mayores.push(el);
+			else menores.push(el);
+		}
+		rebalancear();
+
 	}
 	void getMediana() {
 		if (menores.empty()) {
@@ -35,6 +39,7 @@ public:
 		else {
 			std::cout << menores.top() << " ";
 			menores.pop();
+			rebalancear();
 		}
 	}
 

@@ -25,7 +25,7 @@ using namespace std;
 // ================================================================
 //@ <answer>
 
-bool resuelveCaso() {
+bool resuelveCaso() { 
    
    // leer los datos de la entrada
     int V, A;

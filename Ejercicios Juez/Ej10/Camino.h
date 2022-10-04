@@ -28,23 +28,25 @@ public:
 		return true;
 	}
 private:
-	bool dfs(Grafo const& gr, int vertice) {
+	void dfs(Grafo const& gr, int vertice) {
 		visitado[vertice] = true;
 		for (auto v : gr.ady(vertice))
 		{
+			if (!libre) return;
+			if (anterior[vertice] == v) continue;
 			if (!visitado[v]) {
 				anterior[v] = vertice;
 				dfs(gr, v);
 			}
 			//Comprueba que solo haya un camino
 			else {
-				if (anterior[vertice] != v) return false;
+				libre = false;
 			}
 		}
-		return true;
 	}
 public:
-	CaminoDFS(Grafo const& gr, int o) : visitado(gr.V(), false), anterior(gr.V()), origen(o) {
-		libre = dfs(gr, o);
+	CaminoDFS(Grafo const& gr, int o) : visitado(gr.V(), false), anterior(gr.V(), -1), origen(o) {
+		libre = true;
+		dfs(gr, o);
 	};
 };
