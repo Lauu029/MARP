@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="1.NumeroCasos.cpp">
+    <ClCompile Include="3.CasosIlimitados.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
@@ -23,7 +23,7 @@
     <ClInclude Include="Grafo.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="MayorNumConexiones.h">
+    <ClInclude Include="ManchasNegras.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
