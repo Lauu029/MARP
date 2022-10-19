@@ -42,24 +42,18 @@ private:
 			{
 				int cas = v + i;
 				if (cas <= ultCas) {
+					if (dig.ady(cas).size() != 0) cas = dig.ady(cas)[0];
 
 					distancia[cas] = distancia[v] + 1;
 					if (cas == ultCas) return;
-					for (int w : dig.ady(cas)) {
-						//if (!visitado[w]) {
-							anterior[w] = v;
-							distancia[w] = distancia[cas];
-							visitado[w] = true;
-							q.push(w);
-						//}
-					}
+					q.push(cas);
 				}
 				//q.push(cas);
 			}
 		}
 	}
 public:
-	Trampas(Digrafo const& dig, int K, int ult) : visitado(dig.V(), false), distancia(dig.V()), anterior(dig.V()), dado(K), ultCas(ult) {
+	Trampas(Digrafo const& dig, int K, int ult) : visitado(dig.V(), false), distancia(dig.V(), -1), anterior(dig.V()), dado(K), ultCas(ult) {
 		bfs(dig);
 	}
 	int nTiradas(int cas) const {
@@ -95,7 +89,7 @@ bool resuelveCaso() {
 		tablero.ponArista(n1 - 1, n2 - 1);
 	}
 	// resolver el caso posiblemente llamando a otras funciones
-	Trampas t(tablero, K, tamTablero-1);
+	Trampas t(tablero, K, tamTablero - 1);
 
 	cout << t.nTiradas(tamTablero - 1) << "\n";
 	// escribir la solución
