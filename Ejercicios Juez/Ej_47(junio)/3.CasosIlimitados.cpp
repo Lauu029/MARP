@@ -56,7 +56,6 @@ public:
 		for (int i = 0; i < G.V(); i++)
 		{
 			if (!vistit[i]) {
-
 				int min = inf;
 				dfs(G, i, costes, min);
 				costeTotal += min;

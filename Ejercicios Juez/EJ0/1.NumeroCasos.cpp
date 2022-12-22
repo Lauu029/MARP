@@ -35,13 +35,9 @@ using namespace std;
 //		alt = 1;
 //		return true;
 //	}
-//
 //	int izq = 0, der = 0;
 //	bool izqAVL = true, derAVL = true;
 //	if (!caso.left().empty()) {
-//
-//
-//
 //		izqAVL = esAVL(caso.left(), noEs, izq);
 //	}
 //	if (!caso.right().empty()) {
@@ -75,26 +71,24 @@ using namespace std;
 //	// escribir la solución
 //}
 
-//bool esAVL(bintree<int> arbol, int& h, int& hi, int& hd) {
-//
-//	if (arbol.right().empty() && arbol.left().empty()) {
-//		return true;
-//	}
-//	if (arbol.right().empty()) {
-//		hi++;
-//		return esAVL(arbol.left(), hi);
-//	}
-//	else if (arbol.left().empty()) {
-//		hd++;
-//		return esAVL(arbol.right(), hd);
-//	}
-//	else {
-//		hi++; hd++;
-//		bool es = (esAVL(arbol.right(), hd) && esAVL(arbol.left(), hi));
-//		return es && abs(hi - hd) <= 1;
-//	}
-//
-//}
+bool esAVL(bintree<int> arbol, int& h, bool& avl) {
+	if (!avl) return false;
+	if (arbol.empty())
+		return true;
+	if (arbol.left().empty() && arbol.right().empty()) {
+		h = 1;
+		return true;
+	}
+	int izq = 0, der = 0;
+	bool izqAVL = true, derAVL = true;
+	if (!arbol.left().empty())
+		izqAVL = esAVL(arbol.left(), izq, izqAVL);
+	if (!arbol.right().empty())
+		derAVL = esAVL(arbol.right(), der, derAVL);
+	h = 1+ max(izq, der);
+	avl = izqAVL && derAVL && abs(izq - der) <= 1;
+	return avl;
+}
 bool esBinario(bintree<int>& arbol) {
 	vector<int> in = arbol.inorder();
 	int i = 0;
@@ -108,9 +102,11 @@ bool esBinario(bintree<int>& arbol) {
 void resuelveCaso() {
 	bintree<int> arbol = leerArbol(-1);
 	int h = 0;
+	bool avl = true;
 	if (esBinario(arbol)) {
-		cout << "SI\n";
-
+		if (esAVL(arbol, h, avl))
+			cout << "SI\n";
+		else cout << "NO\n";
 	}
 	else cout << "NO\n";
 }
