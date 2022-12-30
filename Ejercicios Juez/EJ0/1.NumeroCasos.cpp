@@ -90,6 +90,7 @@ bool esAVL(bintree<int> arbol, int& h, bool& avl) {
 	return avl;
 }
 bool esBinario(bintree<int>& arbol) {
+	if (arbol.empty()) return true;
 	vector<int> in = arbol.inorder();
 	int i = 0;
 	bool bin = true;
@@ -97,17 +98,15 @@ bool esBinario(bintree<int>& arbol) {
 		bin = in[i] < in[i + 1];
 		i++;
 	}
-	return bin;
+	int h = 0;
+	return esAVL(arbol,h,bin);
 }
 void resuelveCaso() {
 	bintree<int> arbol = leerArbol(-1);
 	int h = 0;
 	bool avl = true;
-	if (esBinario(arbol)) {
-		if (esAVL(arbol, h, avl))
+	if (esBinario(arbol)) 
 			cout << "SI\n";
-		else cout << "NO\n";
-	}
 	else cout << "NO\n";
 }
 //@ </answer>

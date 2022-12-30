@@ -28,34 +28,35 @@
 
 using namespace std;
 
+long int costeSuma(PriorityQueue<long int>& numeros) {
+	long int n1, n2;
+	long int costeTotal=0;
+
+	while (!numeros.empty()) {
+		n1 = numeros.top(); numeros.pop();
+		if (numeros.empty()) 
+			break;
+		n2 = numeros.top()+ n1;
+		costeTotal += n2;
+		numeros.pop();
+		numeros.push(n2);
+	}
+	return costeTotal;
+}
 bool resuelveCaso() {
-
-	// leer los datos de la entrada
-	int nElems;
-	cin >> nElems;
-
-	if (nElems == 0)
+	int numNumerosSuma;
+	cin >> numNumerosSuma;
+	if (numNumerosSuma==0) 
 		return false;
-	PriorityQueue <long int> sumas;
-	long int valor;
-	for (int i = 0; i < nElems; i++)
+	 
+	PriorityQueue<long int> costeSumas;
+	long int numero;
+	for (int i = 0; i < numNumerosSuma; i++)
 	{
-		cin >> valor;
-		sumas.push(valor);
+		cin >> numero;
+		costeSumas.push(numero);
 	}
-	long int val1, val2;
-	valor = 0;
-	while (!sumas.empty()) {
-		val1 = sumas.top();
-		sumas.pop();
-		if (sumas.empty()) break;
-		val2 = sumas.top() + val1;
-		valor += val2;
-		sumas.pop();
-
-		sumas.push(val2);
-	}
-	cout << valor << "\n";
+	cout << costeSuma(costeSumas) << "\n";
 	return true;
 }
 

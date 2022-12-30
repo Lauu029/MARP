@@ -5,7 +5,11 @@
  *
  *@ </answer> */
 
- // propios o los de las estructuras de datos de clase
+#include <iostream>
+#include <fstream>
+#include <deque>
+using namespace std;
+
 
 /*@ <answer>
 
@@ -20,51 +24,44 @@
  // Escribe el código completo de tu solución aquí debajo
  // ================================================================
  //@ <answer>
-
-#include <iostream>
-#include <fstream>
-
-#include "PriorityQueue.h"
-
-using namespace std;
-
-struct infoUsuario {
-	long int id;
-	long int periodo;
-	long int turno;
-};
-bool operator < (infoUsuario const& a, infoUsuario const& b) {
-	if (a.turno < b.turno) return true;
-	else if (a.turno == b.turno) return a.id < b.id;
-	else return false;
-}
-void awa(PriorityQueue<infoUsuario, less<infoUsuario>>& uwu, long int iwi) {
-	infoUsuario ewe;
-	for (int i = 0; i < iwi; i++)
-	{
-		ewe = uwu.top();
-		uwu.pop();
-		cout << ewe.id << "\n";
-		ewe.turno += ewe.periodo;
-		uwu.push(ewe);
+int numDiasFelices(deque<int>& bizcocho) {
+	int laura, paula;
+	int felicidad = 0;
+	while (!bizcocho.empty()) {
+		laura = bizcocho.front();
+		bizcocho.pop_front();
+		if (laura == bizcocho.front()) {
+			bizcocho.pop_front();
+			if (laura)
+				felicidad++;
+		}
+		else {
+			paula = bizcocho.back();
+			bizcocho.pop_back();
+			if (laura == paula && laura) felicidad++;
+		}
 	}
+	return felicidad;
 }
+
 bool resuelveCaso() {
-	long int ewe, iwi;
-	cin >> ewe;
-	if (!ewe)
+
+	// leer los datos de la entrada
+	int numDias;
+	cin >> numDias;
+	if (!std::cin)  // fin de la entrada
 		return false;
-	PriorityQueue<infoUsuario, less<infoUsuario>> uwu;
-	infoUsuario owo;
-	for (int i = 0; i < ewe; i++)
+
+	// resolver el caso posiblemente llamando a otras funciones
+	deque<int> frutas;
+	int trozoBizcocho;
+	for (int i = 0; i < numDias; i++)
 	{
-		cin >> owo.id >> owo.periodo;
-		owo.turno = owo.periodo;
-		uwu.push(owo);
+		cin >> trozoBizcocho;
+		frutas.push_back(trozoBizcocho);
 	}
-	cin >> iwi;
-	awa(uwu, iwi);
-	cout << "---\n";
+	// escribir la solución
+	cout << numDiasFelices(frutas) << "\n";
 	return true;
 }
 
@@ -87,4 +84,3 @@ int main() {
 #endif
 	return 0;
 }
-

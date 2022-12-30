@@ -32,86 +32,37 @@ struct infoCordel {
 
 //Numero de cordeles con matriz
 EntInf numCordelesM(vector<infoCordel>const& cordeles, int L) {
-	int n = cordeles.size();
-	Matriz<EntInf> cordelesMinimos(n + 1, L + 1, Infinito);
-	cordelesMinimos[0][0] = 0;
-	for (int i = 1; i <= n; ++i) {
-		cordelesMinimos[i][0] = 0;
-		for (int j = 1; j <= L; ++j)
-			if (cordeles[i - 1].longitud > j)
-				cordelesMinimos[i][j] = cordelesMinimos[i - 1][j];
-			else
-				cordelesMinimos[i][j] = min(cordelesMinimos[i - 1][j], cordelesMinimos[i - 1][j - cordeles[i - 1].longitud] + 1);
+	for (int i = 0; i < L; i++)
+	{
+		for (int j = 0; j < cordeles.size(); j++)
+		{
+			if (cordeles[i, j].longitud > L)
+				;
+
+		}
 	}
-	return cordelesMinimos[n][L];
 }
 //Precio con matriz
 EntInf precioM(vector<infoCordel>const& cordeles, int L) {
-	int n = cordeles.size();
-	Matriz<EntInf> cordelesMinimos(n + 1, L + 1, Infinito);
-	cordelesMinimos[0][0] = 0;
-	for (int i = 1; i <= n; ++i) {
-		cordelesMinimos[i][0] = 0;
-		for (int j = 1; j <= L; ++j)
-			if (cordeles[i - 1].longitud > j)
-				cordelesMinimos[i][j] = cordelesMinimos[i - 1][j];
-			else
-				cordelesMinimos[i][j] = min(cordelesMinimos[i - 1][j], cordelesMinimos[i - 1][j - cordeles[i - 1].longitud] + cordeles[i - 1].precio);
-	}
-	return cordelesMinimos[n][L];
+
+
 }
 //formas de hacerlo con matriz
 EntInf FormasM(vector<infoCordel>const& cordeles, int L) {
-	int n = cordeles.size();
-	Matriz<EntInf> cordelesMinimos(n + 1, L + 1, 0);
-	cordelesMinimos[0][0] = 1;
-	for (int i = 1; i <= n; ++i) {
-		cordelesMinimos[i][0] = 1;
-		for (int j = 1; j <= L; ++j) {
-			if (cordeles[i-1].longitud > j)
-				cordelesMinimos[i][j] = cordelesMinimos[i - 1][j];
-			else
-				cordelesMinimos[i][j] = cordelesMinimos[i - 1][j] + cordelesMinimos[i-1][j - cordeles[i-1].longitud];
-		}
-	}
-	return cordelesMinimos[n][L];
+
 }
 //Numero de cordeles con vector
 EntInf numCordelesV(vector<infoCordel>const& cordeles, int L) {
-	int n = cordeles.size();
-	vector<EntInf> cordelesMinimos(L + 1, Infinito);
-	cordelesMinimos[0] = 0;
-	for (int i = 1; i <= n; ++i) {
-		for (int j = L; j >= cordeles[i - 1].longitud; --j)
-			if (cordeles[i - 1].longitud <= j)
-				cordelesMinimos[j] = min(cordelesMinimos[j], cordelesMinimos[j - cordeles[i - 1].longitud] + 1);
-	}
-	return cordelesMinimos[L];
+
 }
 
 //Precio con vector
 EntInf precioV(vector<infoCordel>const& cordeles, int L) {
-	int n = cordeles.size();
-	vector<EntInf> cordelesMinimos(L + 1, Infinito);
-	cordelesMinimos[0] = 0;
-	for (int i = 1; i <= n; ++i) {
-		for (int j = L; j >= cordeles[i - 1].longitud; --j)
-			if (cordeles[i - 1].longitud <= j)
-				cordelesMinimos[j] = min(cordelesMinimos[j], cordelesMinimos[j - cordeles[i - 1].longitud] + cordeles[i - 1].precio);
-	}
-	return cordelesMinimos[L];
+
 }
 //formas con vector
 EntInf formasV(vector<infoCordel>const& cordeles, int L) {
-	int n = cordeles.size();
-	vector<EntInf> cordelesMinimos(L + 1, 0);
-	cordelesMinimos[0] = 1;
-	for (int i = 1; i <=n; ++i) {
-		for (int j = L; j >= cordeles[i-1].longitud; --j) {
-			cordelesMinimos[j] = cordelesMinimos[j - cordeles[i-1].longitud] + cordelesMinimos[j];
-		}
-	}
-	return cordelesMinimos[L];
+
 }
 bool resuelveCaso() {
 	// leer los datos de la entrada
@@ -123,14 +74,16 @@ bool resuelveCaso() {
 	// resolver el caso posiblemente llamando a otras funciones
 	for (int i = 0; i < N; i++)
 		cin >> cordeles[i].longitud >> cordeles[i].precio;
+
 	Matriz<EntInf> minimoPrecio(N + 1, L + 1, Infinito);
-	Matriz<int> minimasCuerdas(N + 1, L + 1, -1);
+	Matriz<EntInf> minimasCuerdas(N + 1, L + 1, Infinito);
+
 	// escribir la solución
-	EntInf solucionIngeniero = numCordelesM(cordeles, L);
 	EntInf solucionEconomista = precioM(cordeles, L);
+	EntInf costeMinimo = numCordelesM(cordeles, L);
 	EntInf solucionMatematico = FormasM(cordeles, L);
-	if (solucionIngeniero != Infinito)
-		cout << "SI " << solucionMatematico << " " << solucionIngeniero << " " << solucionEconomista << "\n";
+	if (costeMinimo != Infinito)
+		cout << "SI " << solucionMatematico << " " << costeMinimo << " " << solucionEconomista << "\n";
 	else cout << "NO\n";
 	return true;
 }

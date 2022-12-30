@@ -25,41 +25,40 @@ using namespace std;
  // Escribe el código completo de tu solución aquí debajo
  // ================================================================
  //@ <answer>
-struct paciente {
+struct infoPaciente {
 	string nombre;
-	long int gravedad;
-	int id;
+	long int id;
+	long int pachucho;
 };
-
-bool operator>(paciente const& a, paciente const& b) {
-	return a.gravedad > b.gravedad || (a.gravedad == b.gravedad && a.id < b.id);
+bool operator < (infoPaciente const& a, infoPaciente const& b) {
+	if (a.pachucho > b.pachucho) return true;
+	else if (a.pachucho == b.pachucho)return a.id < b.id;
+	else return false;
 }
+
 bool resuelveCaso() {
-
-	// leer los datos de la entrada
-	int nCasos;
-	cin >> nCasos;
-	if (!cin)
+	int eventos;
+	cin >> eventos;
+	if (!eventos)
 		return false;
-	if (nCasos == 0) return false;
-
-	PriorityQueue<paciente, greater<paciente>> urgencias;
-
-	char accion;
-	paciente enfermo;
-	int i = 0;
-	while (nCasos--) {
-
-		cin >> accion;
-		if (accion == 'I') {
-			cin >> enfermo.nombre >> enfermo.gravedad;
-			enfermo.id = i;
-			urgencias.push(enfermo);
-			i++;
+	infoPaciente malito;
+	PriorityQueue<infoPaciente, less<infoPaciente>> tanPalArrastre;
+	char queHacemos;
+	long int id = 0;
+	for (int i = 0; i < eventos; i++)
+	{
+		cin >> queHacemos;
+		if (queHacemos == 'I') {
+			malito.id = id;
+			id++;
+			cin >> malito.nombre >> malito.pachucho;
+			tanPalArrastre.push(malito);
 		}
-		else if (!urgencias.empty()) {
-			cout << urgencias.top().nombre << "\n";
-			urgencias.pop();
+		else if (queHacemos == 'A') {
+			if (!tanPalArrastre.empty()) {
+				malito = tanPalArrastre.top(); tanPalArrastre.pop();
+				cout << malito.nombre << "\n";
+			}
 		}
 	}
 	cout << "---\n";
