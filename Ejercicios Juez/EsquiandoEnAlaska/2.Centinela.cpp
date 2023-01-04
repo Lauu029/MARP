@@ -24,41 +24,43 @@ using namespace std;
  // Escribe el código completo de tu solución aquí debajo
  // ================================================================
  //@ <answer>
-int numNecesitados(deque<int>& necesitados, deque<int>& disponibles) {
-	int numNecesitados = 0;
-	int indiceNecesitan = 0;
-	int dif = 0;
-	for (int numCamiseta = 0; numCamiseta < disponibles.size(); numCamiseta++) {
-		if (indiceNecesitan < necesitados.size()) {
-
-			dif = disponibles[numCamiseta] - necesitados[indiceNecesitan];
-			if (dif == 0 || dif == 1)//le vale la camiseta
-			{
-				indiceNecesitan++;
-			}
-			else if(dif<0) {
-				numNecesitados++;
-				indiceNecesitan++;
-				numCamiseta--;
-			}
-		}
+int minimaDiferencia(deque<int>& tallas, deque<int>& actores) {
+	int dif=0;
+	while (!tallas.empty() && !actores.empty()) {
+		int t = tallas.front(); tallas.pop_front();
+		int a = actores.front(); actores.pop_front();
+		dif += abs(t - a);
 	}
-	return numNecesitados+(necesitados.size()-indiceNecesitan);
+	return dif;
 }
 bool resuelveCaso() {
-	int N, D;
-	cin >> N >> D;
-	if (!cin) return false;
-	deque<int> necesitados(N, 0);
-	deque<int>disponibles(D, 0);
-	for (int i = 0; i < N; i++)
-		cin >> necesitados[i];
-	sort(necesitados.begin(), necesitados.end(), greater<int>());
-	for (int i = 0; i < D; i++)
-		cin >> disponibles[i];
-	sort(disponibles.begin(), disponibles.end(), greater<int>());
+	int numEsquiadores;
+	cin >> numEsquiadores;
+	// leer los datos de la entrada
 
-	cout << numNecesitados(necesitados, disponibles) << "\n";
+	if (numEsquiadores == 0)
+		return false;
+
+	deque<int> tallas;
+	deque <int> actores;
+	int aux;
+	for (int i = 0; i < numEsquiadores; i++)
+	{
+		cin >> aux;
+		tallas.push_back(aux);
+	}
+	sort(tallas.begin(), tallas.end(), less<int>());
+	for (int i = 0; i < numEsquiadores; i++)
+	{
+		cin >> aux;
+		actores.push_back(aux);
+	}
+	sort(actores.begin(), actores.end(), less<int>());
+	cout << minimaDiferencia(tallas, actores) << "\n";
+	// resolver el caso posiblemente llamando a otras funciones
+
+	// escribir la solución
+
 	return true;
 }
 

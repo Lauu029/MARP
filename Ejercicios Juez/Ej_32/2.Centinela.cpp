@@ -8,7 +8,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <vector>
+#include <deque>
+#include <algorithm>
 using namespace std;
 
 // propios o los de las estructuras de datos de clase
@@ -28,8 +29,8 @@ using namespace std;
  //@ <answer>
 class hora {
 protected:
-	int min;
 	int hor;
+	int min;
 
 public:
 	friend std::istream& operator>>(std::istream& i, hora& h) {
@@ -55,13 +56,20 @@ public:
 		}
 		return h;
 	}
-	bool operator<(const hora& h) {
-		if (hor >= h.hor) return false;
-		if (hor == h.hor && min >= h.min) return false;
-		return true;		
-	}
+	int getMin() const { return min; }
+	int getHora() const { return hor; }
 
 };
+bool operator<(const hora& h1, const hora& h2) {
+	if (h1.getHora() >= h2.getHora()) return false;
+	if (h1.getHora() == h2.getHora()) return h1.getMin() < h2.getMin();
+	return true;
+}
+bool operator>(const hora& h1, const hora& h2) {
+	if (h1.getHora() < h2.getHora()) return false;
+	if (h1.getHora() == h2.getHora()) return h1.getMin() > h2.getMin();
+	return true;
+}
 struct infoPeli {
 	hora ini;
 	int dur;
@@ -69,6 +77,18 @@ struct infoPeli {
 };
 bool operator<(const infoPeli& inf, const infoPeli& inf2) {
 	return inf.ini < inf2.ini;
+}
+int numPelisVistas(deque<infoPeli>& horasPelis) {
+	int pelis = 0;
+	while (!horasPelis.empty()) {
+		infoPeli p = horasPelis.front(); horasPelis.pop_front();
+		pelis++;//mira la peli
+		if (!horasPelis.empty()) {
+			if (p.fin > horasPelis.front().ini)
+				horasPelis.pop_front();//descarta la siguiente película si no puede verla
+		}
+	}
+	return pelis;
 }
 bool resuelveCaso() {
 
@@ -78,16 +98,15 @@ bool resuelveCaso() {
 
 	if (!numPelis)
 		return false;
-	vector<infoPeli> horasPelis(numPelis);
+	deque<infoPeli> horasPelis(numPelis);
 	for (int i = 0; i < numPelis; i++)
 	{
 		cin >> horasPelis[i].ini >> horasPelis[i].dur;
-		horasPelis[i].fin = horasPelis[i].ini + (horasPelis[i].dur+10);
+		horasPelis[i].fin = horasPelis[i].ini + (horasPelis[i].dur + 10);
 	}
-	for (int i = 0; i < numPelis; i++)
-	{
-		cout << horasPelis[i].ini << horasPelis[i].dur<<" " <<horasPelis[i].fin << "\n";
-	}
+	sort(horasPelis.begin(), horasPelis.end(), less<infoPeli>());
+
+	cout << numPelisVistas(horasPelis) << "\n";
 	// resolver el caso posiblemente llamando a otras funciones
 
 	// escribir la solución
