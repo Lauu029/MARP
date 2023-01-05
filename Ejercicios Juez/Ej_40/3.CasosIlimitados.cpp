@@ -25,48 +25,59 @@ using namespace std;
  // ================================================================
  //@ <answer>
 
-struct cofre {
-	int distancia;
+struct infoCofre {
+	int prof;
 	int valor;
 };
-
-int maxOro(vector<cofre>const& cof, Matriz<int>& oro, int i, int j) {
-	if (oro[i][j] != -1)
-		return oro[i][j];
-	if (i == 0 || j == 0)
-		oro[i][j] = 0;
-	else if (3 * cof[i - 1].distancia > j)
-		oro[i][j] = maxOro(cof, oro, i - 1, j);
-	else
-		oro[i][j] = max(maxOro(cof, oro, i - 1, j), maxOro(cof, oro, i - 1, j - 3 * cof[i - 1].distancia) + cof[i - 1].valor);
-
-	return oro[i][j];		
+//recursión: rescate(i,j) maximo valor que conseguimos rescatar con tiempo máximo j, considerando los cofres de 1 a i
+//casos base: i=0-> no hay objetos, valor=0
+//			j=0-> no hay tiempo, valor=0
+int rescate(int i, int j, Matriz<int>& resultados, vector<infoCofre>& cofres) {
+	if (resultados[i][j] != -1)
+		return resultados[i][j];
+	if (i == 0 || j == 0) resultados[i][j] = 0;
+	else {
+		//¿valido?-> coste de subir y bajar(3*prof-> 1 bajar 2 subir) < tiempo  total
+		if (cofres[i-1].prof * 3 > j)
+			//va a por el objeto anterior
+			resultados[i][j] = rescate(i - 1, j, resultados, cofres);
+		else
+			resultados[i][j] = max(rescate(i - 1, j, resultados, cofres), rescate(i-1, j - 3 * cofres[i-1].prof, resultados, cofres) + cofres[i-1].valor);
+	}
+	return resultados[i][j];
 }
-
 bool resuelveCaso() {
 
 	int T, N;
 	cin >> T >> N;
 	if (!std::cin)
 		return false;
-	vector<cofre> c(N);
-	Matriz<int> oro(N + 1, T + 1, -1);
-	vector<cofre> sol;
+	vector<infoCofre> cofres;
+	infoCofre c;
 	for (int i = 0; i < N; i++)
-		cin >> c[i].distancia >> c[i].valor;
-	cout << maxOro(c, oro, N, T ) << "\n";
-	int i = N;
-	int j = T;
-	while (i > 0 && j > 0) {
-		if (oro[i][j] != oro[i - 1][j]) {
-			sol.push_back({ c[i-1].distancia,c[i-1].valor });
-			j = j -3* c[i - 1].distancia;
-		}
-		--i;
+	{
+		cin >> c.prof >> c.valor;
+		cofres.push_back(c);
 	}
-	cout << sol.size() << "\n";
-	for (int i = sol.size()-1; i >=0; i--)
-		cout << sol[i].distancia << " " << sol[i].valor << "\n";
+	Matriz<int>resultados(N + 1, T + 1, -1);
+	cout << rescate(N, T, resultados, cofres)<<"\n";
+	int numRescatados = 0;
+	vector<bool> solucion(N, false);
+	int i = N, j = T;
+	while (i > 0 && j > 0) {
+		if (resultados[i][j] != resultados[i - 1][j]) {
+			j -= 3 * cofres[i - 1].prof;
+			numRescatados++;
+			solucion[i-1] = true;
+		}
+		i--;
+	}
+	cout << numRescatados << "\n";
+	for (int i = 0; i < solucion.size(); i++)
+	{
+		if (solucion[i])cout << cofres[i].prof << " " << cofres[i].valor << "\n";
+	}
+
 	cout << "---\n";
 	return true;
 }
