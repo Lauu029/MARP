@@ -13,117 +13,122 @@ using namespace std;
 #include "EnterosInf.h"
 
 /*@ <answer>
-  
+
  Escribe aquí un comentario general sobre la solución, explicando cómo
  se resuelve el problema y cuál es el coste de la solución, en función
  del tamaño del problema.
- 
+
  @ </answer> */
 
 
-// ================================================================
-// Escribe el código completo de tu solución aquí debajo
-// ================================================================
-//@ <answer>
+ // ================================================================
+ // Escribe el código completo de tu solución aquí debajo
+ // ================================================================
+ //@ <answer>
 
-struct cordelInfo {
-    EntInf minimoNumCuerdas = Infinito;
-    EntInf coste = Infinito;
-	long long int numPosibilidades = 0;
+struct dianaInfo {
+	EntInf numTiradas = Infinito;
+	std::vector<int> sectoresSolucion;
 };
 
-cordelInfo coste_Cordeles(vector<int> const& costes, vector<int> const& longitud, int longitudPedida) {
+dianaInfo solveDiana(vector<int> const& sectores, int valorASumar) {
 
-	vector<EntInf> costesCuerdas(longitudPedida + 1, Infinito);
-	vector<EntInf> minimoNumCuerdas(longitudPedida + 1, Infinito);
-	vector<long long int> numPosibilidades(longitudPedida + 1, 0);
-	int n = costes.size();
-	costesCuerdas[0] = 0;
-	minimoNumCuerdas[0] = 0;
-	numPosibilidades[0] = 1;
-	for (int i = 0; i < n; i++) {
-		for (int j = longitudPedida; j >= longitud[i]; --j) {
-			numPosibilidades[j] = numPosibilidades[j - longitud[i]] + numPosibilidades[j];
-		}
-	}
-	if (numPosibilidades[longitudPedida] > 0) {
-		for (int i = 0; i < n; i++)
+	Matriz<EntInf> minimoNumTiradas(sectores.size() + 1, valorASumar + 1, Infinito);
+	int n = sectores.size();
+	minimoNumTiradas[0][0] = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		minimoNumTiradas[i][0] = 0;
+		for (int j = 1; j <= valorASumar; ++j)
 		{
-			for (int j = 0; j <= longitudPedida; j++)
-			{
-				if (longitud[i] <= j) {
-					costesCuerdas[j] = min(costesCuerdas[j], costesCuerdas[j - longitud[i]] + costes[i]);
-					minimoNumCuerdas[j] = min(minimoNumCuerdas[j], minimoNumCuerdas[j - longitud[i]] + 1);
-					//numPosibilidades[j] = numPosibilidades[j - longitud[i]] + numPosibilidades[j];
-				}
+			if (sectores[i - 1] > j) {
+				minimoNumTiradas[i][j] = minimoNumTiradas[i - 1][j];
 			}
-
-
+			else
+				minimoNumTiradas[i][j] = min(minimoNumTiradas[i - 1][j], minimoNumTiradas[i][j - sectores[i - 1]] + 1);
 		}
 	}
-	
-	cordelInfo auxInfo;
-	auxInfo.coste = costesCuerdas[longitudPedida];
-	auxInfo.minimoNumCuerdas = minimoNumCuerdas[longitudPedida];
-	auxInfo.numPosibilidades = numPosibilidades[longitudPedida];
+
+	dianaInfo auxInfo;
+	auxInfo.numTiradas = minimoNumTiradas[n][valorASumar];
+
+	// Reconstruimos la solucion
+	if (minimoNumTiradas[n][valorASumar] != Infinito) {
+		int i = n; //Tipos de sectores
+		int j = valorASumar;
+		while (j > 0) {	// Mientras no se ha alcanzado el valor total
+			// Cogemos valores con los que podamos meter en la puntuacion prefiriendo los mas grandes
+			if (sectores[i - 1] <= j && minimoNumTiradas[i][j] == minimoNumTiradas[i][j - sectores[i - 1]] + 1) {
+				// Cogemos otro mas de tipo i
+				auxInfo.sectoresSolucion.push_back(sectores[i - 1]);
+				j = j - sectores[i - 1];
+			}
+			else {	// No tomamos mas sectores de tipo i
+				--i;
+			}
+		}
+	}
+
 	return auxInfo;
 }
 
 bool resuelveCaso() {
-   
-   // leer los datos de la entrada
-    int numCordeles;
 
-    std::cin >> numCordeles;
+	// leer los datos de la entrada
+	int valorASumar;
 
-    if (!std::cin)  // fin de la entrada
-      return false;
+	std::cin >> valorASumar;
 
-    int longitudPedida;
+	if (!std::cin)  // fin de la entrada
+		return false;
 
-    std::cin >> longitudPedida;
+	int numSectores;
 
-	vector<int> longitudes;
-	vector<int> costes;
+	std::cin >> numSectores;
 
-	int auxLongitud, auxCoste;
-	for (int i = 0; i < numCordeles; ++i) {
-		std::cin >> auxLongitud >> auxCoste;
-		longitudes.push_back(auxLongitud);
-		costes.push_back(auxCoste);
+	vector<int> sectores;
+
+	int auxSector;
+	for (int i = 0; i < numSectores; ++i) {
+		std::cin >> auxSector;
+		sectores.push_back(auxSector);
 	}
-   
-   // resolver el caso posiblemente llamando a otras funciones
-	cordelInfo resultado = coste_Cordeles(costes, longitudes, longitudPedida);
-   
 
-   // escribir la solución
-	if (resultado.numPosibilidades != 0) {
-		std::cout << "SI " << resultado.numPosibilidades << " " << resultado.minimoNumCuerdas << " " << resultado.coste << "\n";
+	// resolver el caso posiblemente llamando a otras funciones
+	dianaInfo resultado = solveDiana(sectores, valorASumar);
+
+
+	// escribir la solución
+	if (resultado.numTiradas != Infinito) {
+		std::cout << resultado.numTiradas << ": ";
+		for (int i : resultado.sectoresSolucion) {
+			std::cout << i << " ";
+		}
+		std::cout << "\n";
 	}
 	else {
-		std::cout << "NO\n";
+		std::cout << "Imposible\n";
 	}
 
-   return true;
+	return true;
 }
 
 //@ </answer>
 //  Lo que se escriba dejado de esta línea ya no forma parte de la solución.
 
 int main() {
-   // ajustes para que cin extraiga directamente de un fichero
+	// ajustes para que cin extraiga directamente de un fichero
 #ifndef DOMJUDGE
-   std::ifstream in("casos.txt");
-   auto cinbuf = std::cin.rdbuf(in.rdbuf());
+	std::ifstream in("casos.txt");
+	auto cinbuf = std::cin.rdbuf(in.rdbuf());
 #endif
-   
-   while (resuelveCaso());
-   
-   // para dejar todo como estaba al principio
+
+	while (resuelveCaso());
+
+	// para dejar todo como estaba al principio
 #ifndef DOMJUDGE
-   std::cin.rdbuf(cinbuf);
-   system("PAUSE");
+	std::cin.rdbuf(cinbuf);
+	system("PAUSE");
 #endif
-   return 0;
+	return 0;
 }

@@ -26,13 +26,13 @@ using namespace std;
 // ================================================================
 //@ <answer>
 
-struct cordelInfo {
+struct dianaInfo {
     EntInf minimoNumCuerdas = Infinito;
     EntInf coste = Infinito;
 	long long int numPosibilidades = 0;
 };
 
-cordelInfo coste_Cordeles(vector<int> const& costes, vector<int> const& longitud, int longitudPedida) {
+dianaInfo solveDiana(vector<int> const& costes, vector<int> const& longitud, int longitudPedida) {
 
 	vector<EntInf> costesCuerdas(longitudPedida + 1, Infinito);
 	vector<EntInf> minimoNumCuerdas(longitudPedida + 1, Infinito);
@@ -57,7 +57,7 @@ cordelInfo coste_Cordeles(vector<int> const& costes, vector<int> const& longitud
 		}
 	}
 	
-	cordelInfo auxInfo;
+	dianaInfo auxInfo;
 	auxInfo.coste = costesCuerdas[longitudPedida];
 	auxInfo.minimoNumCuerdas = minimoNumCuerdas[longitudPedida];
 	auxInfo.numPosibilidades = numPosibilidades[longitudPedida];
@@ -89,7 +89,7 @@ bool resuelveCaso() {
 	}
    
    // resolver el caso posiblemente llamando a otras funciones
-	cordelInfo resultado = coste_Cordeles(costes, longitudes, longitudPedida);
+	dianaInfo resultado = solveDiana(costes, longitudes, longitudPedida);
    
 
    // escribir la solución
