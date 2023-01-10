@@ -36,7 +36,7 @@ int bfsModificado(Digrafo const& grafo, int actual, int final, int K) {
     while (!cola.empty() && !llegadoAlFinal) {
         int v = cola.front(); cola.pop();
         for (int i = 1; i < K + 1; ++i) {
-            if (v + i == final) {
+            if (v + i >= final - 1) {
                 llegadoAlFinal = true;
                 numTurnos = dist[v] + 1;
                 break;
@@ -69,6 +69,11 @@ bool resuelveCaso() {
    
    if (N==0 && K==0 && S==0 && E==0)
       return false;
+
+   if (N == 0 || K == 0) {
+       std::cout << "0\n";
+       return true;
+   }
 
    Digrafo grafo(N * N);
 
